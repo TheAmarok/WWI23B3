@@ -14,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
 @Import(TestcontainersConfiguration.class)
 @SpringBootTest
@@ -69,6 +70,16 @@ class KaWwi23B3ApplicationTests {
                 """;
 
         JSONAssert.assertEquals(expectedResponseGet, getResponse, true);
+
+        // Step 3: Delete the Todo Item
+        MvcResult deleteResult = mockMvc.perform(delete("/todos/" + 1))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        // Step 4: Retrieve the Todo Item to make sure that it is deleted
+        MvcResult getDeletedResult = mockMvc.perform(get("/todos/" + 1))
+                .andExpect(status().isNotFound())
+                .andReturn();
     }
 
 
